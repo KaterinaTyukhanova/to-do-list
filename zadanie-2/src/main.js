@@ -51,19 +51,17 @@ Vue.component('board', {
             </form>
           </div>
         </div>
-
-        {{blocking(card)}}
         
         <div class="columns-on-page">
           
           <div class="column">
             <h2 class="title-column">0% выполнено</h2>
-            <div class="card" v-for="(card, index) in one_column" :key="index">
+            <div class="card" v-for="(card, index) in one_column" :key="index" :class="{'disabled': column2_disable}">
               <h3>{{ card.name_card }}</h3>
               <div class="line"></div>
               <ul>
                 <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)" :disabled="column2_disable">
+                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)" :disabled="column1_lock">
                   <label for="check">{{item.item_text}}</label>
                 </li>
               </ul>
@@ -116,6 +114,7 @@ Vue.component('board', {
             item_five: null,
             errors: [],
             showForm: false,
+            column1_lock: false,
             column2_disable: false,
             column3_disable: true
         }
@@ -126,19 +125,14 @@ Vue.component('board', {
             this.one_column = savedData.one_column;
             this.two_column = savedData.two_column;
             this.three_column = savedData.three_column;
+            this.column2_disable = savedData.column2_disable;
+            this.column1_lock = savedData.column1_lock;
         }
     },
     methods: {
-        blocking(card){
-            if(this.two_column.length === 5){
-                this.column2_disable = true;
-            }else{
-                this.column2_disable = false;
-            }
-        },
         onSubmit(){
             this.errors = [];
-            if(this.one_column.length < 3){
+            if(!this.column1_lock && this.one_column.length < 3){
                 if(this.name && this.item_one && this.item_two && this.item_three && this.item_four && this.item_five){
                     this.one_column.push({
                         name_card: this.name,
@@ -193,12 +187,26 @@ Vue.component('board', {
                     if(!this.item_two) this.errors.push("Задача №2 не может быть пустой!");
                     if(!this.item_three) this.errors.push("Задача №3 не может быть пустой!");
                 }
+            }else {
+                return;
+            }
+
+            if (this.two_column.length < 5) {
+                this.column1_lock = false;
             }
             localStorage.setItem('cards', JSON.stringify({
-                one_column: this.one_column
+                one_column: this.one_column,
+                column1_lock: this.column1_lock,
+                column2_disable: this.column2_disable
             }));
         },
         updateCard(card){
+            if (this.column1_lock) {
+                return;
+            }
+
+            this.column2_disable = false
+
             const completed_tasks = card.item_list.filter(item => item.checked).length;
             const progress = (completed_tasks / card.item_list.length) * 100;
             const index_column1 = this.one_column.indexOf(card)
@@ -221,13 +229,21 @@ Vue.component('board', {
                         this.one_column.splice(index_column1, 1);
                         this.two_column.push(card);
                     }
+                }else {
+                    this.column2_disable = true;
                 }
+            }
+
+            if (this.column1_lock && this.two_column.length === 5 && progress >= 50) {
+                this.column2_disable = true;
             }
 
             localStorage.setItem('cards', JSON.stringify({
                 one_column: this.one_column,
                 two_column: this.two_column,
-                three_column: this.three_column
+                three_column: this.three_column,
+                column1_lock: this.column1_lock,
+                column2_disable: this.column2_disable
             }));
         }
     }
