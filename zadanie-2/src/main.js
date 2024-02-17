@@ -56,14 +56,44 @@ Vue.component('board', {
           
           <div class="column">
             <h2 class="title-column">0% выполнено</h2>
+            <div class="card" v-for="(card, index) in one_column" :key="index">
+              <h3>{{ card.name_card }}</h3>
+              <div class="line"></div>
+              <ul>
+                <li v-for="item in card.item_list">
+                  <input id="check" type="checkbox" v-model="item.checked">
+                  <label for="check">{{item.item_text}}</label>
+                </li>
+              </ul>
+            </div>
           </div>
           
           <div class="column">
             <h2 class="title-column">50% выполнено</h2>
+            <div class="card" v-for="(card, index) in two_column" :key="index">
+              <h3>{{ card.name_card }}</h3>
+              <div class="line"></div>
+              <ul>
+                <li v-for="item in card.item_list">
+                  <input id="check" type="checkbox" v-model="item.checked">
+                  <label for="check">{{item.item_text}}</label>
+                </li>
+              </ul>
+            </div>
           </div>
           
           <div class="column">
             <h2 class="title-column">100% выполнено</h2>
+            <div class="card" v-for="(card, index) in three_column" :key="index">
+              <h3>{{ card.name_card }}</h3>
+              <div class="line"></div>
+              <ul>
+                <li v-for="item in card.item_list">
+                  <input id="check" type="checkbox" v-model="item.checked">
+                  <label for="check">{{item.item_text}}</label>
+                </li>
+              </ul>
+            </div>
           </div>
           
         </div>

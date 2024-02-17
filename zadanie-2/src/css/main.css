@@ -39,3 +39,25 @@ body {
     border: #03356e solid 2px;
     border-radius: 3px;
 }
+
+.card {
+    background-color: #e8f4fc;
+    border-radius: 5px;
+    border: #5583B7 solid 3px;
+    margin: 10px 15px;
+}
+
+.card h3{
+    text-align: center;
+}
+
+ul li{
+    list-style: none;
+    display: flex;
+}
+
+.line {
+    background-color: #5583B7;
+    height: 3px;
+    width: 100%;
+}
