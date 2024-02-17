@@ -120,6 +120,14 @@ Vue.component('board', {
             column3_disable: true
         }
     },
+    mounted() {
+        if (localStorage.getItem('cards')) {
+            const savedData = JSON.parse(localStorage.getItem('cards'));
+            this.one_column = savedData.one_column;
+            this.two_column = savedData.two_column;
+            this.three_column = savedData.three_column;
+        }
+    },
     methods: {
         blocking(card){
             if(this.two_column.length === 5){
@@ -186,6 +194,9 @@ Vue.component('board', {
                     if(!this.item_three) this.errors.push("Задача №3 не может быть пустой!");
                 }
             }
+            localStorage.setItem('cards', JSON.stringify({
+                one_column: this.one_column
+            }));
         },
         updateCard(card){
             const completed_tasks = card.item_list.filter(item => item.checked).length;
@@ -212,6 +223,12 @@ Vue.component('board', {
                     }
                 }
             }
+
+            localStorage.setItem('cards', JSON.stringify({
+                one_column: this.one_column,
+                two_column: this.two_column,
+                three_column: this.three_column
+            }));
         }
     }
 })
