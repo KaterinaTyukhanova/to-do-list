@@ -1,3 +1,7 @@
+body {
+    background-color: #e8f4fc;
+}
+
 .title{
     text-align: center;
     color: #38a6f5;
@@ -27,3 +31,11 @@
     color: white;
 }
 
+.btn-create-card {
+    width: 130px;
+    height: 50px;
+    background-color: #38a6f5;
+    color: white;
+    border: #03356e solid 2px;
+    border-radius: 3px;
+}
