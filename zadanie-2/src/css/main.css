@@ -1,0 +1,29 @@
+.title{
+    text-align: center;
+    color: #38a6f5;
+    font-family: Elephant;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.columns-on-page {
+    display: flex;
+    gap: 50px;
+}
+
+.column{
+    border-radius: 10px;
+    background-color: #03356e;
+    width: 350px;
+}
+
+.title-column{
+    text-align: center;
+    color: white;
+}
+

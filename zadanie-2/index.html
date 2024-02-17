@@ -2,12 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script defer src="/src/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <link rel="stylesheet" href="src/css/main.css">
+    <title>ToDo App</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <div id="app">
+        <h1 class="title">Заметки</h1>
+        <board></board>
+    </div>
   </body>
 </html>

@@ -1,11 +1,33 @@
-import './assets/main.css'
+Vue.component('board', {
+    template:`
+      <div class="product">
+        
+        <div class="columns-on-page">
+          
+          <div class="column">
+            <h2 class="title-column">0% выполнено</h2>
+          </div>
+          
+          <div class="column">
+            <h2 class="title-column">50% выполнено</h2>
+          </div>
+          
+          <div class="column">
+            <h2 class="title-column">100% выполнено</h2>
+          </div>
+          
+        </div>
+        
+      </div>
+    `,
+    data(){
+        return{}
+    },
+    methods: {}
+})
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
 
-const app = createApp(App)
 
-app.use(router)
-
-app.mount('#app')
+let app = new Vue({
+    el: '#app'
+})
