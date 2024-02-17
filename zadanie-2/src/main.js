@@ -3,48 +3,53 @@ Vue.component('board', {
       <div class="product">
 
         <div class="add-card-form">
-          <form @submit.prevent="onSubmit">
-            <p v-if="errors.length">
-              <b>Возникли следующие ошибки, пожалуйста, исправьте их!</b>
-            <ul>
-              <li v-for="error in errors">{{ error }}</li>
-            </ul>
-            </p>
+          <button class="btn-create-card" @click="showForm = true">Показать форму</button>
+          <button class="btn-create-card" @click="showForm = false">Скрыть форму</button>
+          
+          <div v-if="showForm">
+            <form @submit.prevent="onSubmit">
+              <p v-if="errors.length">
+                <b>Возникли следующие ошибки, пожалуйста, исправьте их!</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+              </p>
 
-            <p>
-              <label for="name">Название заметки</label>
-              <input id="name" v-model="name">
-            </p>
+              <p>
+                <label for="name">Название заметки</label>
+                <input id="name" v-model="name">
+              </p>
 
-            <p>
-              <label for="item_one">Задача №1</label>
-              <input id="item_one" v-model="item_one">
-            </p>
+              <p>
+                <label for="item_one">Задача №1</label>
+                <input id="item_one" v-model="item_one">
+              </p>
 
-            <p>
-              <label for="item_two">Задача №2</label>
-              <input id="item_two" v-model="item_two">
-            </p>
+              <p>
+                <label for="item_two">Задача №2</label>
+                <input id="item_two" v-model="item_two">
+              </p>
 
-            <p>
-              <label for="item_three">Задача №3</label>
-              <input id="item_three" v-model="item_three">
-            </p>
+              <p>
+                <label for="item_three">Задача №3</label>
+                <input id="item_three" v-model="item_three">
+              </p>
 
-            <p>
-              <label for="item_four">Задача №4</label>
-              <input id="item_four" v-model="item_four">
-            </p>
+              <p>
+                <label for="item_four">Задача №4</label>
+                <input id="item_four" v-model="item_four">
+              </p>
 
-            <p>
-              <label for="item_five">Задача №5</label>
-              <input id="item_five" v-model="item_five">
-            </p>
+              <p>
+                <label for="item_five">Задача №5</label>
+                <input id="item_five" v-model="item_five">
+              </p>
 
-            <p>
-              <input class="btn-create-card" type="submit" value="Создать заметку">
-            </p>
-          </form>
+              <p>
+                <input class="btn-create-card" type="submit" value="Создать заметку">
+              </p>
+            </form>
+          </div>
         </div>
         
         <div class="columns-on-page">
@@ -76,10 +81,71 @@ Vue.component('board', {
             item_three: null,
             item_four: null,
             item_five: null,
-            errors: []
+            errors: [],
+            showForm: false
         }
     },
-    methods: {}
+    methods: {
+        onSubmit(){
+            this.errors = [];
+            if(this.one_column.length < 3){
+                if(this.name && this.item_one && this.item_two && this.item_three && this.item_four && this.item_five){
+                    this.one_column.push({
+                        name_card: this.name,
+                        item_list: [
+                            {item_text: this.item_one, checked: false},
+                            {item_text: this.item_two, checked: false},
+                            {item_text: this.item_three, checked: false},
+                            {item_text: this.item_four, checked: false},
+                            {item_text: this.item_five, checked: false},
+                        ]
+                    });
+                    this.name = null;
+                    this.item_one = null;
+                    this.item_two= null;
+                    this.item_three = null;
+                    this.item_four = null;
+                    this.item_five = null;
+                }
+                else if(this.name && this.item_one && this.item_two && this.item_three && this.item_four){
+                    this.one_column.push({
+                        name_card: this.name,
+                        item_list: [
+                            {item_text: this.item_one, checked: false},
+                            {item_text: this.item_two, checked: false},
+                            {item_text: this.item_three, checked: false},
+                            {item_text: this.item_four, checked: false},
+                        ]
+                    });
+                    this.name = null;
+                    this.item_one = null;
+                    this.item_two = null;
+                    this.item_three = null;
+                    this.item_four = null;
+                }
+                else if(this.name && this.item_one && this.item_two && this.item_three){
+                    this.one_column.push({
+                        name_card: this.name,
+                        item_list: [
+                            {item_text: this.item_one, checked: false},
+                            {item_text: this.item_two, checked: false},
+                            {item_text: this.item_three, checked: false},
+                        ]
+                    });
+                    this.name = null;
+                    this.item_one = null;
+                    this.item_two = null;
+                    this.item_three = null;
+                }
+                else{
+                    if(!this.name) this.errors.push("Название заметки не может быть пустым!");
+                    if(!this.item_one) this.errors.push("Задача №1 не может быть пустой!");
+                    if(!this.item_two) this.errors.push("Задача №2 не может быть пустой!");
+                    if(!this.item_three) this.errors.push("Задача №3 не может быть пустой!");
+                }
+            }
+        }
+    }
 })
 
 
