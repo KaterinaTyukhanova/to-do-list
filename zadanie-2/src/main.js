@@ -61,7 +61,7 @@ Vue.component('board', {
               <div class="line"></div>
               <ul>
                 <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked">
+                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
                   <label for="check">{{item.item_text}}</label>
                 </li>
               </ul>
@@ -75,7 +75,7 @@ Vue.component('board', {
               <div class="line"></div>
               <ul>
                 <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked">
+                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
                   <label for="check">{{item.item_text}}</label>
                 </li>
               </ul>
@@ -89,10 +89,11 @@ Vue.component('board', {
               <div class="line"></div>
               <ul>
                 <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked">
+                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
                   <label for="check">{{item.item_text}}</label>
                 </li>
               </ul>
+              <p class="date-time">Время отметки последнего пункта: {{ card.lastComplete }}</p>
             </div>
           </div>
           
@@ -172,6 +173,32 @@ Vue.component('board', {
                     if(!this.item_one) this.errors.push("Задача №1 не может быть пустой!");
                     if(!this.item_two) this.errors.push("Задача №2 не может быть пустой!");
                     if(!this.item_three) this.errors.push("Задача №3 не может быть пустой!");
+                }
+            }
+        },
+        updateCard(card){
+            const completed_tasks = card.item_list.filter(item => item.checked).length;
+            const progress = (completed_tasks / card.item_list.length) * 100;
+            const index_column1 = this.one_column.indexOf(card)
+            const index_column2 = this.two_column.indexOf(card)
+
+            if(progress === 100){
+                if (index_column2 !== -1) {
+                    this.two_column.splice(index_column2, 1);
+                    this.three_column.push(card);
+                    card.lastComplete = new Date().toLocaleString();
+                }
+                else {
+                    card.lastComplete = null;
+                }
+            }
+
+            else if(progress >= 50){
+                if(this.two_column.length < 5) {
+                    if (index_column1 !== -1) {
+                        this.one_column.splice(index_column1, 1);
+                        this.two_column.push(card);
+                    }
                 }
             }
         }

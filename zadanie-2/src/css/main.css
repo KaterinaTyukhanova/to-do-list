@@ -61,3 +61,8 @@ ul li{
     height: 3px;
     width: 100%;
 }
+
+.date-time{
+    font-size: 14px;
+    text-align: center;
+}
