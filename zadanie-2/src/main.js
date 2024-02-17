@@ -51,6 +51,8 @@ Vue.component('board', {
             </form>
           </div>
         </div>
+
+        {{blocking(card)}}
         
         <div class="columns-on-page">
           
@@ -61,7 +63,7 @@ Vue.component('board', {
               <div class="line"></div>
               <ul>
                 <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
+                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)" :disabled="column2_disable">
                   <label for="check">{{item.item_text}}</label>
                 </li>
               </ul>
@@ -89,7 +91,7 @@ Vue.component('board', {
               <div class="line"></div>
               <ul>
                 <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
+                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)" :disabled="column3_disable">
                   <label for="check">{{item.item_text}}</label>
                 </li>
               </ul>
@@ -113,10 +115,19 @@ Vue.component('board', {
             item_four: null,
             item_five: null,
             errors: [],
-            showForm: false
+            showForm: false,
+            column2_disable: false,
+            column3_disable: true
         }
     },
     methods: {
+        blocking(card){
+            if(this.two_column.length === 5){
+                this.column2_disable = true;
+            }else{
+                this.column2_disable = false;
+            }
+        },
         onSubmit(){
             this.errors = [];
             if(this.one_column.length < 3){
