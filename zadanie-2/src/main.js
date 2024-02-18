@@ -57,28 +57,76 @@ Vue.component('board', {
           <div class="column">
             <h2 class="title-column">0% выполнено</h2>
             <div class="card" v-for="(card, index) in one_column" :key="index" :class="{'disabled': column2_disable}">
-              <h3>{{ card.name_card }}</h3>
-              <div class="line"></div>
-              <ul>
-                <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)" :disabled="column1_lock">
-                  <label for="check">{{item.item_text}}</label>
-                </li>
-              </ul>
+              <div v-if="editedTaskIndex !== index || editedColumn !== 'one_column'">
+                <h3>{{ card.name_card }}</h3>
+                <div class="line"></div>
+                <ul>
+                  <li v-for="item in card.item_list">
+                    <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)" :disabled="column1_lock">
+                    <label for="check">{{item.item_text}}</label>
+                  </li>
+                </ul>
+                <button @click="startEditing(index, 'one_column')">Редактировать</button>
+              </div>
+              <div v-if="edit && editedColumn === 'one_column' && editedTaskIndex === index">
+                <h3>Редактировать задачу</h3>
+                <form @submit.prevent="finishEditing">
+                  <label for="editTitle">Заголовок задачи:</label>
+                  <input id="editTitle" type="text" v-model="editedTask.name">
+                  <p>
+                    <label for="item_one">Задача №1</label>
+                    <input id="item_one" v-model="editedTask.item_one">
+                  </p>
+                  <p>
+                    <label for="item_two">Задача №2</label>
+                    <input id="item_two" v-model="editedTask.item_two">
+                  </p>
+                  <p>
+                    <label for="item_three">Задача №3</label>
+                    <input id="item_three" v-model="editedTask.item_three">
+                  </p>
+                  
+                  <button type="submit">Сохранить</button>
+                </form>
+              </div>
             </div>
           </div>
           
           <div class="column">
             <h2 class="title-column">50% выполнено</h2>
             <div class="card" v-for="(card, index) in two_column" :key="index">
-              <h3>{{ card.name_card }}</h3>
-              <div class="line"></div>
-              <ul>
-                <li v-for="item in card.item_list">
-                  <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
-                  <label for="check">{{item.item_text}}</label>
-                </li>
-              </ul>
+              <div v-if="editedTaskIndex !== index || editedColumn !== 'two_column'">
+                <h3>{{ card.name_card }}</h3>
+                <div class="line"></div>
+                <ul>
+                  <li v-for="item in card.item_list">
+                    <input id="check" type="checkbox" v-model="item.checked" @change="updateCard(card)">
+                    <label for="check">{{item.item_text}}</label>
+                  </li>
+                </ul>
+                <button @click="startEditing(index, 'two_column')">Редактировать</button>
+              </div>
+              <div v-if="edit && editedColumn === 'two_column' && editedTaskIndex === index">
+                <h3>Редактировать задачу</h3>
+                <form @submit.prevent="finishEditing">
+                  <label for="editTitle">Заголовок задачи:</label>
+                  <input id="editTitle" type="text" v-model="editedTask.name">
+                  <p>
+                    <label for="item_one">Задача №1</label>
+                    <input id="item_one" v-model="editedTask.item_one">
+                  </p>
+                  <p>
+                    <label for="item_two">Задача №2</label>
+                    <input id="item_two" v-model="editedTask.item_two">
+                  </p>
+                  <p>
+                    <label for="item_three">Задача №3</label>
+                    <input id="item_three" v-model="editedTask.item_three">
+                  </p>
+
+                  <button type="submit">Сохранить</button>
+                </form>
+              </div>
             </div>
           </div>
           
@@ -116,7 +164,14 @@ Vue.component('board', {
             showForm: false,
             column1_lock: false,
             column2_disable: false,
-            column3_disable: true
+            column3_disable: true,
+            edit: false,
+            editedTask: null,
+            editedTaskIndex: null,
+            editedColumn: null,
+            check_item_one: false,
+            check_item_two: false,
+            check_item_three: false
         }
     },
     mounted() {
@@ -130,6 +185,70 @@ Vue.component('board', {
         }
     },
     methods: {
+        startEditing(index, column) {
+            this.edit = true;
+            this.editedTaskIndex = index;
+            this.editedColumn = column;
+
+            if(this.editedColumn === 'one_column'){
+                this.editedTask = {
+                    name: this.one_column[index].name_card,
+                    item_one: this.one_column[index].item_list[0].item_text,
+                    item_two: this.one_column[index].item_list[1].item_text,
+                    item_three: this.one_column[index].item_list[2].item_text,
+                    check_item_one: this.one_column[index].item_list[0].checked,
+                    check_item_two: this.one_column[index].item_list[1].checked,
+                    check_item_three: this.one_column[index].item_list[2].checked
+                };
+            }
+
+            if(this.editedColumn === 'two_column'){
+                this.editedTask = {
+                    name: this.two_column[index].name_card,
+                    item_one: this.two_column[index].item_list[0].item_text,
+                    item_two: this.two_column[index].item_list[1].item_text,
+                    item_three: this.two_column[index].item_list[2].item_text,
+                    check_item_one: this.two_column[index].item_list[0].checked,
+                    check_item_two: this.two_column[index].item_list[1].checked,
+                    check_item_three: this.two_column[index].item_list[2].checked
+                };
+            }
+        },
+        finishEditing() {
+            if (this.editedColumn === 'one_column') {
+                this.one_column[this.editedTaskIndex] = {
+                    name_card: this.editedTask.name,
+                    item_list: [
+                        { item_text: this.editedTask.item_one, checked: this.editedTask.check_item_one },
+                        { item_text: this.editedTask.item_two, checked: this.editedTask.check_item_two },
+                        { item_text: this.editedTask.item_three, checked: this.editedTask.check_item_three }
+                    ]
+                };
+            }
+
+            if (this.editedColumn === 'two_column') {
+                this.two_column[this.editedTaskIndex] = {
+                    name_card: this.editedTask.name,
+                    item_list: [
+                        { item_text: this.editedTask.item_one, checked: this.editedTask.check_item_one },
+                        { item_text: this.editedTask.item_two, checked: this.editedTask.check_item_two},
+                        { item_text: this.editedTask.item_three, checked: this.editedTask.check_item_three }
+                    ]
+                };
+            }
+
+            localStorage.setItem('cards', JSON.stringify({
+                one_column: this.one_column,
+                two_column: this.two_column,
+                three_column: this.three_column,
+                column1_lock: this.column1_lock,
+                column2_disable: this.column2_disable
+            }));
+
+            this.editedTaskIndex = null;
+            this.editedColumn = null;
+            this.edit = false;
+        },
         onSubmit(){
             this.errors = [];
             if(!this.column1_lock && this.one_column.length < 3){
