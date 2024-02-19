@@ -66,11 +66,12 @@ Vue.component('board', {
                     <label for="check">{{item.item_text}}</label>
                   </li>
                 </ul>
+                <p v-if="card.lastChange !== null">Последнее редактирование: {{ card.lastChange }}</p>
                 <button @click="startEditing(index, 'one_column')">Редактировать</button>
               </div>
               <div v-if="edit && editedColumn === 'one_column' && editedTaskIndex === index">
                 <h3>Редактировать задачу</h3>
-                <form @submit.prevent="finishEditing">
+                <form @submit.prevent="finishEditing(editedTaskIndex)">
                   <label for="editTitle">Заголовок задачи:</label>
                   <input id="editTitle" type="text" v-model="editedTask.name">
                   <p>
@@ -86,7 +87,7 @@ Vue.component('board', {
                     <input id="item_three" v-model="editedTask.item_three">
                   </p>
                   
-                  <button type="submit">Сохранить</button>
+                  <button type="submit" >Сохранить</button>
                 </form>
               </div>
             </div>
@@ -104,11 +105,12 @@ Vue.component('board', {
                     <label for="check">{{item.item_text}}</label>
                   </li>
                 </ul>
+                <p v-if="card.lastChange !== null">Последнее редактирование: {{ card.lastChange }}</p>
                 <button @click="startEditing(index, 'two_column')">Редактировать</button>
               </div>
               <div v-if="edit && editedColumn === 'two_column' && editedTaskIndex === index">
                 <h3>Редактировать задачу</h3>
-                <form @submit.prevent="finishEditing">
+                <form @submit.prevent="finishEditing(editedTaskIndex)">
                   <label for="editTitle">Заголовок задачи:</label>
                   <input id="editTitle" type="text" v-model="editedTask.name">
                   <p>
@@ -124,7 +126,7 @@ Vue.component('board', {
                     <input id="item_three" v-model="editedTask.item_three">
                   </p>
 
-                  <button type="submit">Сохранить</button>
+                  <button type="submit" >Сохранить</button>
                 </form>
               </div>
             </div>
@@ -168,6 +170,7 @@ Vue.component('board', {
             edit: false,
             editedTask: null,
             editedTaskIndex: null,
+            editDataIndex: null,
             editedColumn: null,
             check_item_one: false,
             check_item_two: false,
@@ -189,6 +192,7 @@ Vue.component('board', {
             this.edit = true;
             this.editedTaskIndex = index;
             this.editedColumn = column;
+
 
             if(this.editedColumn === 'one_column'){
                 this.editedTask = {
@@ -214,7 +218,7 @@ Vue.component('board', {
                 };
             }
         },
-        finishEditing() {
+        finishEditing(index) {
             if (this.editedColumn === 'one_column') {
                 this.one_column[this.editedTaskIndex] = {
                     name_card: this.editedTask.name,
@@ -222,7 +226,8 @@ Vue.component('board', {
                         { item_text: this.editedTask.item_one, checked: this.editedTask.check_item_one },
                         { item_text: this.editedTask.item_two, checked: this.editedTask.check_item_two },
                         { item_text: this.editedTask.item_three, checked: this.editedTask.check_item_three }
-                    ]
+                    ],
+                    lastChange: new Date().toLocaleString()
                 };
             }
 
@@ -233,7 +238,8 @@ Vue.component('board', {
                         { item_text: this.editedTask.item_one, checked: this.editedTask.check_item_one },
                         { item_text: this.editedTask.item_two, checked: this.editedTask.check_item_two},
                         { item_text: this.editedTask.item_three, checked: this.editedTask.check_item_three }
-                    ]
+                    ],
+                    lastChange: new Date().toLocaleString()
                 };
             }
 
@@ -261,7 +267,8 @@ Vue.component('board', {
                             {item_text: this.item_three, checked: false},
                             {item_text: this.item_four, checked: false},
                             {item_text: this.item_five, checked: false},
-                        ]
+                        ],
+                        lastChange: null
                     });
                     this.name = null;
                     this.item_one = null;
@@ -278,7 +285,8 @@ Vue.component('board', {
                             {item_text: this.item_two, checked: false},
                             {item_text: this.item_three, checked: false},
                             {item_text: this.item_four, checked: false},
-                        ]
+                        ],
+                        lastChange: null
                     });
                     this.name = null;
                     this.item_one = null;
@@ -293,7 +301,8 @@ Vue.component('board', {
                             {item_text: this.item_one, checked: false},
                             {item_text: this.item_two, checked: false},
                             {item_text: this.item_three, checked: false},
-                        ]
+                        ],
+                        lastChange: null
                     });
                     this.name = null;
                     this.item_one = null;
